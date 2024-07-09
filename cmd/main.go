@@ -13,10 +13,11 @@ func main() {
 	SCREEN_HEIGHT := rl.GetScreenHeight()
 
 	player := ntt.Player{
-		Shape:    rl.NewRectangle(100, 100, 50, 50),
+		Shape: ntt.Rect{
+			Rectangle: rl.NewRectangle(100, 100, 50, 50),
+		},
 		Rotation: 0,
 	}
-	player.Weapon = &ntt.Fist{}
 
 	camera := rl.Camera2D{}
 	camera.Zoom = 1.0
@@ -32,14 +33,15 @@ func main() {
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
 		player.Update(dt)
-		camera.Target = player.Center()
+		ntt.Resolve(&player, tiles)
+		camera.Target = player.Origin()
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		{
 			rl.BeginMode2D(camera)
 			{
 				player.Render()
-			tiles.Render()
+				tiles.Render()
 			}
 			rl.EndMode2D()
 

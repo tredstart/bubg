@@ -1,63 +1,42 @@
 package ntt
 
 import (
-	"math"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
-const base_speed = 100
+const player_speed = 300
 
 type Player struct {
-	Shape        rl.Rectangle
-	Rotation     float32
-	Weapon       Weapon
-	WeaponOffset rl.Vector2
-	Camera       *rl.Camera2D
+	Shape    Rect
+	Rotation float32
+	Camera   *rl.Camera2D
 }
 
 var DC = rl.NewColor(40, 140, 50, 100)
 
-func (p *Player) Center() rl.Vector2 {
+func (p *Player) Origin() rl.Vector2 {
 	return rl.Vector2{
 		X: p.Shape.X + p.Shape.Width/2,
 		Y: p.Shape.Y + p.Shape.Height/2,
 	}
 }
 
-func getSpeed() float32 {
-	if rl.IsKeyDown(rl.KeyLeftShift) {
-		return base_speed + 50
-	} else {
-		return base_speed
-	}
-}
-
 func (p *Player) Update(dt float32) {
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
 
-	delta := rl.Vector2Subtract(p.Center(), mouse_pos)
-
-	p.Rotation = float32(math.Atan2(float64(delta.Y), float64(delta.X))) * rl.Rad2deg
-
-
-	if rl.IsKeyPressed(rl.MouseLeftButton) {
-		p.Weapon.Attack()
-	}
-
-	speed := getSpeed()
+	p.Rotation = LookAt(mouse_pos, p.Origin())
 
 	if rl.IsKeyDown(rl.KeyW) {
-		p.Shape.Y -= speed * dt
+		p.Shape.Y -= player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyA) {
-		p.Shape.X -= speed * dt
+		p.Shape.X -= player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyS) {
-		p.Shape.Y += speed * dt
+		p.Shape.Y += player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyD) {
-		p.Shape.X += speed * dt
+		p.Shape.X += player_speed * dt
 	}
 }
 
@@ -71,7 +50,7 @@ func (p *Player) Render() {
 	origin := rl.Vector2{X: p.Shape.Width / 2, Y: p.Shape.Height / 2}
 	rl.DrawRectanglePro(dest, origin, p.Rotation, rl.Red)
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
-	rl.DrawLineV(p.Center(), mouse_pos, rl.Red)
+	rl.DrawLineV(p.Origin(), mouse_pos, rl.Red)
 
-	rl.DrawRectangleRec(p.Shape, DC)
+	rl.DrawRectangleRec(p.Shape.Rectangle, DC)
 }
