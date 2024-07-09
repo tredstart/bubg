@@ -6,10 +6,19 @@ import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
+const DEFAULT_WEAPON_MARGIN = 5
+
 func Collides(shape1, shape2 Shape) bool {
 	sep1 := FindMinSeparation(shape1, shape2)
 	sep2 := FindMinSeparation(shape2, shape1)
 	return sep1 <= 0 && sep2 <= 0
+}
+
+func WeaponOffset(sprite rl.Texture2D) rl.Vector2 {
+	return rl.Vector2{
+		X: float32(PLAYER_WIDTH / 2),
+		Y: float32(PLAYER_HEIGHT/2 + sprite.Height + DEFAULT_WEAPON_MARGIN),
+	}
 }
 
 func Overlap(a, b rl.Rectangle) (float32, float32) {

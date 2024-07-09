@@ -18,9 +18,25 @@ func main() {
 	player := ntt.Player{
 		Shape: ntt.NewRect(
 			player_pos,
-			50, 50, 0,
+			ntt.PLAYER_WIDTH, ntt.PLAYER_HEIGHT, 0,
 			rl.Red,
 		),
+	}
+
+	gunt := rl.LoadTexture("assets/sprites/test_gun.png")
+	defer rl.UnloadTexture(gunt)
+	source_rect := rl.Rectangle{
+		Width:  float32(gunt.Width),
+		Height: float32(gunt.Height),
+	}
+
+	player.Weapon = &ntt.Gun{
+		Texture: ntt.Sprite{
+			Texture:     gunt,
+			Scale:       1,
+			Tint:        rl.RayWhite,
+			TextureRect: source_rect,
+		},
 	}
 
 	camera := rl.Camera2D{}
