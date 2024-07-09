@@ -19,7 +19,7 @@ type Tile struct {
 
 func NewTile(x, y float32, c rl.Color) Tile {
 	log.Println("new tile")
-    tile := Tile{
+	tile := Tile{
 		Shape: NewRect(
 			rl.Vector2{
 				X: x,
@@ -29,13 +29,14 @@ func NewTile(x, y float32, c rl.Color) Tile {
 			c,
 		),
 	}
-    tile.Shape.Filled = true
-    return tile
+	tile.Shape.Filled = true
+	return tile
 }
 
 type Tiles []Tile
 
-func (t *Tiles) LoadMap(filepath string) {
+func (t *Tiles) LoadMap(filepath string) rl.Vector2 {
+	var player_pos rl.Vector2
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
@@ -50,6 +51,8 @@ func (t *Tiles) LoadMap(filepath string) {
 			switch c {
 			case 'x':
 				*t = append(*t, NewTile(x, y, rl.Blue))
+			case 'p':
+				player_pos = rl.Vector2{X: x, Y: y}
 			}
 			x += TileWidth + 1
 		}
@@ -59,6 +62,7 @@ func (t *Tiles) LoadMap(filepath string) {
 	if err = scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
+	return player_pos
 }
 
 func (t *Tiles) Render() {

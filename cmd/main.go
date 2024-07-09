@@ -12,22 +12,21 @@ func main() {
 	SCREEN_WIDTH := rl.GetScreenWidth()
 	SCREEN_HEIGHT := rl.GetScreenHeight()
 
+	tiles := ntt.Tiles{}
+
+	player_pos := tiles.LoadMap("assets/maps/test")
 	player := ntt.Player{
-        Shape: ntt.NewRect(
-            rl.Vector2{X: 90, Y: 90},
-            50, 50, 0, 
-            rl.Red,
-        ),
+		Shape: ntt.NewRect(
+			player_pos,
+			50, 50, 0,
+			rl.Red,
+		),
 	}
 
 	camera := rl.Camera2D{}
 	camera.Zoom = 1.0
 	camera.Offset = rl.Vector2{X: float32(SCREEN_WIDTH) / 2, Y: float32(SCREEN_HEIGHT) / 2}
 	player.Camera = &camera
-
-	tiles := ntt.Tiles{}
-
-	tiles.LoadMap("assets/maps/test")
 
 	rl.SetTargetFPS(60)
 
