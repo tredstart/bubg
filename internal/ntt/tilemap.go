@@ -14,17 +14,23 @@ const (
 )
 
 type Tile struct {
-	Shape    Rect
-	Material rl.Color
+	Shape Rect
 }
 
 func NewTile(x, y float32, c rl.Color) Tile {
-	return Tile{
-		Shape: Rect{
-			Rectangle: rl.NewRectangle(x, y, TileWidth, TileHeight),
-		},
-		Material: c,
+	log.Println("new tile")
+    tile := Tile{
+		Shape: NewRect(
+			rl.Vector2{
+				X: x,
+				Y: y,
+			},
+			TileWidth, TileHeight, 0,
+			c,
+		),
 	}
+    tile.Shape.Filled = true
+    return tile
 }
 
 type Tiles []Tile
@@ -41,7 +47,8 @@ func (t *Tiles) LoadMap(filepath string) {
 	for scanner.Scan() {
 		x = 0
 		for _, c := range scanner.Text() {
-			if c == 'x' {
+			switch c {
+			case 'x':
 				*t = append(*t, NewTile(x, y, rl.Blue))
 			}
 			x += TileWidth + 1
@@ -56,6 +63,6 @@ func (t *Tiles) LoadMap(filepath string) {
 
 func (t *Tiles) Render() {
 	for _, tile := range *t {
-		rl.DrawRectangleRec(tile.Shape.Rectangle, tile.Material)
+		tile.Shape.Render()
 	}
 }

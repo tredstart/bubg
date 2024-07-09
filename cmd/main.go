@@ -13,10 +13,11 @@ func main() {
 	SCREEN_HEIGHT := rl.GetScreenHeight()
 
 	player := ntt.Player{
-		Shape: ntt.Rect{
-			Rectangle: rl.NewRectangle(100, 100, 50, 50),
-		},
-		Rotation: 0,
+        Shape: ntt.NewRect(
+            rl.Vector2{X: 90, Y: 90},
+            50, 50, 0, 
+            rl.Red,
+        ),
 	}
 
 	camera := rl.Camera2D{}
@@ -34,7 +35,7 @@ func main() {
 		dt := rl.GetFrameTime()
 		player.Update(dt)
 		ntt.Resolve(&player, tiles)
-		camera.Target = player.Origin()
+		camera.Target = player.Shape.Origin()
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		{

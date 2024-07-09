@@ -39,15 +39,19 @@ func Resolve(player *Player, tiles Tiles) {
 func playerTiles(player *Player, tiles Tiles) {
 	for _, tile := range tiles {
 		if Collides(&player.Shape, &tile.Shape) {
-			shift_x, shift_y := Overlap(tile.Shape.Rectangle, player.Shape.Rectangle)
+			shift_x, shift_y := Overlap(BB(&tile.Shape), BB(&player.Shape))
 			if math.Abs(float64(shift_y)) > math.Abs(float64(shift_x)) {
 				shift_y = 0
 			} else {
 				shift_x = 0
 			}
 
-			player.Shape.Y += shift_y
-			player.Shape.X += shift_x
+			origin := player.Shape.Origin()
+
+			origin.X += shift_x
+			origin.Y += shift_y
+			player.Shape.Move(origin)
+            player.Shape.Rotate(player.rotation)
 		}
 	}
 }

@@ -7,50 +7,37 @@ import (
 const player_speed = 300
 
 type Player struct {
-	Shape    Rect
-	Rotation float32
-	Camera   *rl.Camera2D
-}
-
-var DC = rl.NewColor(40, 140, 50, 100)
-
-func (p *Player) Origin() rl.Vector2 {
-	return rl.Vector2{
-		X: p.Shape.X + p.Shape.Width/2,
-		Y: p.Shape.Y + p.Shape.Height/2,
-	}
+	Shape  Rect
+	Camera *rl.Camera2D
+    rotation float32
 }
 
 func (p *Player) Update(dt float32) {
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
+    p.rotation = LookAt(mouse_pos, p.Shape.Origin())
 
-	p.Rotation = LookAt(mouse_pos, p.Origin())
+	origin := p.Shape.Origin()
 
 	if rl.IsKeyDown(rl.KeyW) {
-		p.Shape.Y -= player_speed * dt
+		origin.Y -= player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyA) {
-		p.Shape.X -= player_speed * dt
+		origin.X -= player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyS) {
-		p.Shape.Y += player_speed * dt
+		origin.Y += player_speed * dt
 	}
 	if rl.IsKeyDown(rl.KeyD) {
-		p.Shape.X += player_speed * dt
+		origin.X += player_speed * dt
 	}
+
+	p.Shape.Move(origin)
+	p.Shape.Rotate(p.rotation)
 }
 
 func (p *Player) Render() {
-	dest := rl.Rectangle{
-		X:      p.Shape.Width/2 + p.Shape.X,
-		Y:      p.Shape.Height/2 + p.Shape.Y,
-		Width:  p.Shape.Width,
-		Height: p.Shape.Height,
-	}
-	origin := rl.Vector2{X: p.Shape.Width / 2, Y: p.Shape.Height / 2}
-	rl.DrawRectanglePro(dest, origin, p.Rotation, rl.Red)
+	p.Shape.Render()
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
-	rl.DrawLineV(p.Origin(), mouse_pos, rl.Red)
-
-	rl.DrawRectangleRec(p.Shape.Rectangle, DC)
+	rl.DrawLineV(p.Shape.Origin(), mouse_pos, rl.Red)
+	rl.DrawRectangleRec(BB(&p.Shape), rl.NewColor(0, 179, 69, 80))
 }
