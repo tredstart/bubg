@@ -16,8 +16,8 @@ func Collides(shape1, shape2 Shape) bool {
 
 func WeaponOffset(sprite rl.Texture2D) rl.Vector2 {
 	return rl.Vector2{
-		X: float32(PLAYER_WIDTH / 2),
-		Y: float32(PLAYER_HEIGHT/2 + sprite.Height + DEFAULT_WEAPON_MARGIN),
+		X: float32(PLAYER_WIDTH/2 + sprite.Width/2),
+		Y: float32(PLAYER_HEIGHT/2 + sprite.Height),
 	}
 }
 

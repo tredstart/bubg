@@ -15,7 +15,7 @@ type Bullet struct {
 }
 
 func NewBullet(pos rl.Vector2, rotation float32) *Bullet {
-	return &Bullet{
+     bullet := &Bullet{
 		Texture: Sprite{
 			Texture: BULLET_TEXTURE,
 			TextureRect: rl.Rectangle{
@@ -36,6 +36,8 @@ func NewBullet(pos rl.Vector2, rotation float32) *Bullet {
 			rotation,
 			rl.NewColor(255, 0, 79, 69)),
 	}
+
+    return bullet
 }
 
 func (b *Bullet) SetVelocity(vel rl.Vector2) {

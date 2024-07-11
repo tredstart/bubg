@@ -31,7 +31,13 @@ func (g *Pistol) Render() {
 }
 
 func (g *Pistol) Attack(world *World) {
-	bullet := NewBullet(g.Texture.Pos, g.Texture.Rotation)
+    offset := WeaponOffset(g.Texture.Texture)
+    origin := rl.Vector2{
+        X: g.Texture.Pos.X - offset.X,
+        Y: g.Texture.Pos.Y - offset.Y + DEFAULT_WEAPON_MARGIN,
+    }
+    bullet_pos := RotatePoint(origin, g.Texture.Pos, g.Texture.Rotation)
+	bullet := NewBullet(bullet_pos, g.Texture.Rotation)
 
 	velocity := rl.Vector2{
 		X: pistol_bullet_velocity * -float32(math.Cos(float64(g.Texture.Rotation) * rl.Deg2rad)),
