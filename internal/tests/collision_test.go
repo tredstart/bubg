@@ -8,16 +8,9 @@ import (
 )
 
 func TestCollideRectangles(t *testing.T) {
-	rect1 := ntt.Rect{
-		Origin: rl.Vector2{X: 4, Y: 4},
-		Width:  4,
-		Height: 4,
-	}
-	rect2 := ntt.Rect{
-		Origin: rl.Vector2{X: 5, Y: 5},
-		Width:  4,
-		Height: 4,
-	}
+
+	rect1 := ntt.NewRect(rl.Vector2{X: 4, Y: 4}, 4, 4, 0, rl.Color{})
+	rect2 := ntt.NewRect(rl.Vector2{X: 5, Y: 5}, 4, 4, 0, rl.Color{})
 
 	ok := ntt.Collides(&rect1, &rect2)
 	if !ok {
@@ -26,16 +19,9 @@ func TestCollideRectangles(t *testing.T) {
 }
 
 func TestRectsDontCollide(t *testing.T) {
-	rect1 := ntt.Rect{
-		Origin: rl.Vector2{X: 0, Y: 0},
-		Width:  4,
-		Height: 4,
-	}
-	rect2 := ntt.Rect{
-		Origin: rl.Vector2{X: 5, Y: 5},
-		Width:  4,
-		Height: 4,
-	}
+
+	rect1 := ntt.NewRect(rl.Vector2{X: 0, Y: 0}, 4, 4, 0, rl.Color{})
+	rect2 := ntt.NewRect(rl.Vector2{X: 5, Y: 5}, 4, 4, 0, rl.Color{})
 
 	ok := ntt.Collides(&rect1, &rect2)
 	if ok {
@@ -45,17 +31,8 @@ func TestRectsDontCollide(t *testing.T) {
 
 func TestRectRotatedCollide(t *testing.T) {
 
-	rect1 := ntt.Rect{
-		Origin:   rl.Vector2{X: 4, Y: 4},
-		Width:    4,
-		Height:   4,
-		Rotation: 45,
-	}
-	rect2 := ntt.Rect{
-		Origin: rl.Vector2{X: 4, Y: 8},
-		Width:  4,
-		Height: 4,
-	}
+	rect1 := ntt.NewRect(rl.Vector2{X: 4, Y: 4}, 4, 4, 45, rl.Color{})
+	rect2 := ntt.NewRect(rl.Vector2{X: 4, Y: 8}, 4, 4, 0, rl.Color{})
 
 	ok := ntt.Collides(&rect1, &rect2)
 	if !ok {
@@ -64,16 +41,8 @@ func TestRectRotatedCollide(t *testing.T) {
 }
 func TestRectRotatedNotCollide(t *testing.T) {
 
-	rect1 := ntt.Rect{
-		Origin: rl.Vector2{X: 4, Y: 3},
-		Width:  4,
-		Height: 4,
-	}
-	rect2 := ntt.Rect{
-		Origin: rl.Vector2{X: 4, Y: 8},
-		Width:  4,
-		Height: 4,
-	}
+	rect1 := ntt.NewRect(rl.Vector2{X: 4, Y: 3}, 4, 4, 45, rl.Color{})
+	rect2 := ntt.NewRect(rl.Vector2{X: 4, Y: 8}, 4, 4, 0, rl.Color{})
 
 	ok := ntt.Collides(&rect1, &rect2)
 	if ok {
@@ -83,11 +52,7 @@ func TestRectRotatedNotCollide(t *testing.T) {
 
 func TestObjectsBB(t *testing.T) {
 
-	rect := ntt.Rect{
-		Origin: rl.Vector2{X: 0, Y: 0},
-		Width:  4,
-		Height: 4,
-	}
+	rect := ntt.NewRect(rl.Vector2{X: 0, Y: 0}, 4, 4, 0, rl.Color{})
 
 	bb := ntt.BB(&rect)
 	if bb.X != -2 || bb.Y != -2 {

@@ -38,12 +38,12 @@ func (p *Player) Update(dt float32) {
 	if rl.IsKeyDown(rl.KeyD) {
 		origin.X += player_speed * dt
 	}
-    if rl.IsKeyPressed(rl.KeyOne) {
-        p.activeWeapon = 0
-    }
-    if rl.IsKeyPressed(rl.KeyTwo) {
-        p.activeWeapon = 1
-    }
+	if rl.IsKeyPressed(rl.KeyOne) {
+		p.activeWeapon = 0
+	}
+	if rl.IsKeyPressed(rl.KeyTwo) {
+		p.activeWeapon = 1
+	}
 	current_weapon := p.CurrentWeapon()
 
 	p.Shape.Move(origin)
