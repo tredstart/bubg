@@ -10,29 +10,29 @@ const (
 	pistol_bullet_velocity = 700.0
 )
 
-type Pistol struct {
+type Gun struct {
 	Texture    Sprite
 	RateOfFire Timer
 }
 
-func (g *Pistol) Rotate(deg float32) {
+func (g *Gun) Rotate(deg float32) {
 	g.Texture.Rotation = deg
 }
 
-func (g *Pistol) Update(float32) {
+func (g *Gun) Update(float32) {
 	g.Texture.Origin = WeaponOffset(g.Texture.Texture)
 	g.RateOfFire.Tick()
 }
 
-func (g *Pistol) SetOrigin(origin rl.Vector2) {
+func (g *Gun) SetOrigin(origin rl.Vector2) {
 	g.Texture.Pos = origin
 }
 
-func (g *Pistol) Render() {
+func (g *Gun) Render() {
 	g.Texture.Render()
 }
 
-func (g *Pistol) Attack(world *World) {
+func (g *Gun) Attack(world *World) {
 	if g.RateOfFire.Finished {
 		g.RateOfFire.Start()
 		offset := WeaponOffset(g.Texture.Texture)

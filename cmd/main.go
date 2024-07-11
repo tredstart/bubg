@@ -31,15 +31,28 @@ func main() {
 		),
 	}
 
-	world.Player.Weapon = &ntt.Pistol{
+	smg := &ntt.Gun{
 		Texture: ntt.Sprite{
 			Texture:     gunt,
 			Scale:       1,
 			Tint:        rl.RayWhite,
 			TextureRect: source_rect,
 		},
-        RateOfFire: ntt.NewTimer(0.5),
+		RateOfFire: ntt.NewTimer(0.01),
 	}
+	pistol := &ntt.Gun{
+		Texture: ntt.Sprite{
+			Texture:     gunt,
+			Scale:       1,
+			Tint:        rl.RayWhite,
+			TextureRect: source_rect,
+		},
+		RateOfFire: ntt.NewTimer(0.5),
+	}
+
+	world.Player.Inventory = ntt.Inventory{}
+    world.Player.Weapons[0] = pistol
+    world.Player.Weapons[1] = smg
 
 	camera := rl.Camera2D{}
 	camera.Zoom = 1.0
@@ -56,6 +69,7 @@ func main() {
 		camera.Target = world.Player.Shape.Origin()
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
+		rl.DrawFPS(20, 20)
 		{
 			rl.BeginMode2D(camera)
 			{
