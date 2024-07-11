@@ -9,13 +9,13 @@ const (
 )
 
 type Bullet struct {
-	Texture Sprite
+	Texture  Sprite
 	Hitbox   Rect
 	Velocity rl.Vector2
 }
 
 func NewBullet(pos rl.Vector2, rotation float32) *Bullet {
-     bullet := &Bullet{
+	bullet := &Bullet{
 		Texture: Sprite{
 			Texture: BULLET_TEXTURE,
 			TextureRect: rl.Rectangle{
@@ -37,7 +37,7 @@ func NewBullet(pos rl.Vector2, rotation float32) *Bullet {
 			rl.NewColor(255, 0, 79, 69)),
 	}
 
-    return bullet
+	return bullet
 }
 
 func (b *Bullet) SetVelocity(vel rl.Vector2) {
@@ -50,11 +50,11 @@ func (b *Bullet) Update(dt float32) {
 	origin.X += b.Velocity.X * dt
 	origin.Y += b.Velocity.Y * dt
 	b.Hitbox.Move(origin)
-    b.Hitbox.Rotate(b.Texture.Rotation)
+	b.Hitbox.Rotate(b.Texture.Rotation)
 	b.Texture.Pos = origin
 }
 
 func (b *Bullet) Render() {
 	b.Texture.Render()
-    b.Hitbox.Render()
+	b.Hitbox.Render()
 }

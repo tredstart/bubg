@@ -38,6 +38,7 @@ func main() {
 			Tint:        rl.RayWhite,
 			TextureRect: source_rect,
 		},
+        RateOfFire: ntt.NewTimer(0.5),
 	}
 
 	camera := rl.Camera2D{}
