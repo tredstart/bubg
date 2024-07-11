@@ -37,15 +37,15 @@ func (p *Player) Update(dt float32) {
 		origin.X += player_speed * dt
 	}
 
-	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
-		p.Weapon.Attack(p.World)
-	}
-
 	p.Shape.Move(origin)
 	p.Shape.Rotate(p.rotation)
 	p.Weapon.SetOrigin(origin)
 	p.Weapon.Rotate(p.rotation)
 	p.Weapon.Update(dt)
+
+	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+		p.Weapon.Attack(p.World)
+	}
 }
 
 func (p *Player) Render() {

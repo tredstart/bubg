@@ -1,6 +1,8 @@
 package ntt
 
 import (
+	"log"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -21,5 +23,6 @@ func (s *Sprite) Render() {
 		Width:  s.TextureRect.Width,
 		Height: s.TextureRect.Height,
 	}
+    log.Println(s.Texture.ID, " : ", dest)
 	rl.DrawTexturePro(s.Texture, s.TextureRect, dest, s.Origin, s.Rotation, s.Tint)
 }

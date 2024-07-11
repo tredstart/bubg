@@ -103,6 +103,7 @@ func Normal(v1, v2 rl.Vector2) rl.Vector2 {
 	length := rl.Vector2Length(edge)
 	return rl.Vector2{X: -edge.Y / length, Y: edge.X / length}
 }
+
 func LookAt(object, target rl.Vector2) float32 {
 	delta := rl.Vector2Subtract(target, object)
 	return float32(math.Atan2(float64(delta.Y), float64(delta.X))) * rl.Rad2deg

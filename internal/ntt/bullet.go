@@ -1,7 +1,6 @@
 package ntt
 
 import (
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -10,14 +9,14 @@ const (
 )
 
 type Bullet struct {
-	Sprite
-	// Hitbox Rect
+	Texture Sprite
+	Hitbox   Rect
 	Velocity rl.Vector2
 }
 
-func NewBullet(pos rl.Vector2, rotation float32) Bullet {
-	return Bullet{
-		Sprite: Sprite{
+func NewBullet(pos rl.Vector2, rotation float32) *Bullet {
+	return &Bullet{
+		Texture: Sprite{
 			Texture: BULLET_TEXTURE,
 			TextureRect: rl.Rectangle{
 				Width:  float32(BULLET_TEXTURE.Width),
@@ -32,6 +31,10 @@ func NewBullet(pos rl.Vector2, rotation float32) Bullet {
 				Y: float32(BULLET_TEXTURE.Height) / 2,
 			},
 		},
+
+		Hitbox: NewRect(pos, float32(BULLET_TEXTURE.Width), float32(BULLET_TEXTURE.Height),
+			rotation,
+			rl.NewColor(255, 0, 79, 69)),
 	}
 }
 
@@ -40,10 +43,16 @@ func (b *Bullet) SetVelocity(vel rl.Vector2) {
 }
 
 func (b *Bullet) Update(dt float32) {
-	b.Sprite.Origin.X += b.Velocity.X * dt
-	b.Sprite.Origin.Y += b.Velocity.Y * dt
+
+	origin := b.Hitbox.Origin()
+	origin.X += b.Velocity.X * dt
+	origin.Y += b.Velocity.Y * dt
+	b.Hitbox.Move(origin)
+    b.Hitbox.Rotate(b.Texture.Rotation)
+	b.Texture.Pos = origin
 }
 
 func (b *Bullet) Render() {
-	b.Sprite.Render()
+	b.Texture.Render()
+    b.Hitbox.Render()
 }

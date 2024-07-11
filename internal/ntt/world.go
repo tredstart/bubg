@@ -1,8 +1,6 @@
 package ntt
 
 import (
-	"log"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -13,13 +11,12 @@ var (
 type World struct {
 	Player     Player
 	CurrentMap Tiles
-	Bullets    []Bullet
+	Bullets    []*Bullet
 }
 
 func (w *World) Update(dt float32) {
 	w.Player.Update(dt)
 	for _, bullet := range w.Bullets {
-        log.Println(bullet.Sprite.Pos)
 		bullet.Update(dt)
 	}
 }

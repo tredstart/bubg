@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	pistol_bullet_velocity = 500.0
+	pistol_bullet_velocity = 1500.0
 )
 
 type Pistol struct {
@@ -34,8 +34,8 @@ func (g *Pistol) Attack(world *World) {
 	bullet := NewBullet(g.Texture.Pos, g.Texture.Rotation)
 
 	velocity := rl.Vector2{
-		X: pistol_bullet_velocity * float32(math.Cos(float64(g.Texture.Rotation))),
-		Y: pistol_bullet_velocity * float32(math.Sin(float64(g.Texture.Rotation))),
+		X: pistol_bullet_velocity * -float32(math.Cos(float64(g.Texture.Rotation) * rl.Deg2rad)),
+		Y: pistol_bullet_velocity * -float32(math.Sin(float64(g.Texture.Rotation) * rl.Deg2rad)),
 	}
 	bullet.SetVelocity(velocity)
 	world.Bullets = append(world.Bullets, bullet)
