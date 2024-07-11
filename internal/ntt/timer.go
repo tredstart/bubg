@@ -1,8 +1,6 @@
 package ntt
 
 import (
-	"log"
-
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -22,7 +20,6 @@ func NewTimer(end float32) Timer {
 func (t *Timer) Tick() {
 	if !t.Finished {
 		t.current_time += rl.GetFrameTime()
-        log.Println(t.current_time)
 		if t.current_time >= t.end {
 			t.Stop()
 		}

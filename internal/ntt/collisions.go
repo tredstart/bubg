@@ -32,11 +32,7 @@ func overlap(a, b rl.Rectangle) (float32, float32) {
 	return shift_x, shift_y
 }
 
-func Resolve(player *Player, tiles Tiles) {
-	playerTiles(player, tiles)
-}
-
-func playerTiles(player *Player, tiles Tiles) {
+func ResolvePlayerTiles(player *Player, tiles Tiles) {
 	for _, tile := range tiles {
 		if Collides(&player.Shape, &tile.Shape) {
 			shift_x, shift_y := Overlap(BB(&tile.Shape), BB(&player.Shape))
@@ -54,4 +50,14 @@ func playerTiles(player *Player, tiles Tiles) {
             player.Shape.Rotate(player.rotation)
 		}
 	}
+}
+
+func BulletCollidesTiles(bullet *Bullet, tiles Tiles) bool {
+	for _, tile := range tiles {
+		if Collides(&bullet.Hitbox, &tile.Shape) {
+            return true
+		}
+	}
+
+    return false
 }

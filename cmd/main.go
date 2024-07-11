@@ -53,7 +53,6 @@ func main() {
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
 		world.Update(dt)
-		ntt.Resolve(&world.Player, world.CurrentMap)
 		camera.Target = world.Player.Shape.Origin()
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
