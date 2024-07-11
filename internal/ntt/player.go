@@ -14,7 +14,8 @@ type Player struct {
 	Shape    Rect
 	Camera   *rl.Camera2D
 	rotation float32
-    Weapon Weapon
+	Weapon   Weapon
+	World    *World
 }
 
 func (p *Player) Update(dt float32) {
@@ -36,11 +37,15 @@ func (p *Player) Update(dt float32) {
 		origin.X += player_speed * dt
 	}
 
+	if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+		p.Weapon.Attack(p.World)
+	}
+
 	p.Shape.Move(origin)
 	p.Shape.Rotate(p.rotation)
-    p.Weapon.SetOrigin(origin)
-    p.Weapon.Rotate(p.rotation)
-    p.Weapon.Update(dt)
+	p.Weapon.SetOrigin(origin)
+	p.Weapon.Rotate(p.rotation)
+	p.Weapon.Update(dt)
 }
 
 func (p *Player) Render() {
@@ -48,5 +53,5 @@ func (p *Player) Render() {
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
 	rl.DrawLineV(p.Shape.Origin(), mouse_pos, rl.Red)
 	rl.DrawRectangleRec(BB(&p.Shape), rl.NewColor(0, 179, 69, 80))
-    p.Weapon.Render()
+	p.Weapon.Render()
 }

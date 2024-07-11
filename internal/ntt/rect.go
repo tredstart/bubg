@@ -1,7 +1,6 @@
 package ntt
 
 import (
-	"log"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
@@ -28,7 +27,6 @@ func NewRect(origin rl.Vector2, width, height, rotation float32, color rl.Color)
 	}
 	rect.Rotate(rotation)
 	rect.Move(origin)
-	log.Println(rect)
 	return rect
 }
 

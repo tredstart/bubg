@@ -14,9 +14,9 @@ type Node interface {
 }
 
 type Weapon interface {
-    Node
+	Node
 	Renderable
-	Attack()
+	Attack(*World)
 }
 
 type Renderable interface {

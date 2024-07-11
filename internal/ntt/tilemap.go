@@ -18,7 +18,6 @@ type Tile struct {
 }
 
 func NewTile(x, y float32, c rl.Color) Tile {
-	log.Println("new tile")
 	tile := Tile{
 		Shape: NewRect(
 			rl.Vector2{

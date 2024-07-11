@@ -12,10 +12,18 @@ func main() {
 	SCREEN_WIDTH := rl.GetScreenWidth()
 	SCREEN_HEIGHT := rl.GetScreenHeight()
 
-	tiles := ntt.Tiles{}
+	gunt := rl.LoadTexture("assets/sprites/test_gun.png")
+	ntt.BULLET_TEXTURE = rl.LoadTexture("assets/sprites/bullet.png")
+	defer rl.UnloadTexture(gunt)
+	source_rect := rl.Rectangle{
+		Width:  float32(gunt.Width),
+		Height: float32(gunt.Height),
+	}
 
-	player_pos := tiles.LoadMap("assets/maps/test")
-	player := ntt.Player{
+	world := ntt.World{}
+	defer world.Unload()
+	player_pos := world.CurrentMap.LoadMap("assets/maps/test")
+	world.Player = ntt.Player{
 		Shape: ntt.NewRect(
 			player_pos,
 			ntt.PLAYER_WIDTH, ntt.PLAYER_HEIGHT, 0,
@@ -23,14 +31,7 @@ func main() {
 		),
 	}
 
-	gunt := rl.LoadTexture("assets/sprites/test_gun.png")
-	defer rl.UnloadTexture(gunt)
-	source_rect := rl.Rectangle{
-		Width:  float32(gunt.Width),
-		Height: float32(gunt.Height),
-	}
-
-	player.Weapon = &ntt.Gun{
+	world.Player.Weapon = &ntt.Pistol{
 		Texture: ntt.Sprite{
 			Texture:     gunt,
 			Scale:       1,
@@ -42,22 +43,23 @@ func main() {
 	camera := rl.Camera2D{}
 	camera.Zoom = 1.0
 	camera.Offset = rl.Vector2{X: float32(SCREEN_WIDTH) / 2, Y: float32(SCREEN_HEIGHT) / 2}
-	player.Camera = &camera
+	world.Player.Camera = &camera
+
+	world.Player.World = &world
 
 	rl.SetTargetFPS(60)
 
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
-		player.Update(dt)
-		ntt.Resolve(&player, tiles)
-		camera.Target = player.Shape.Origin()
+		world.Update(dt)
+		ntt.Resolve(&world.Player, world.CurrentMap)
+		camera.Target = world.Player.Shape.Origin()
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		{
 			rl.BeginMode2D(camera)
 			{
-				player.Render()
-				tiles.Render()
+				world.Render()
 			}
 			rl.EndMode2D()
 
