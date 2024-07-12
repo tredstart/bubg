@@ -8,6 +8,7 @@ type Timer struct {
 	current_time float32
 	end          float32
 	Finished     bool
+	Callback     func()
 }
 
 func NewTimer(end float32) Timer {
@@ -36,5 +37,8 @@ func (t *Timer) Stop() {
 	if !t.Finished {
 		t.current_time = 0
 		t.Finished = true
+		if t.Callback != nil {
+			t.Callback()
+		}
 	}
 }

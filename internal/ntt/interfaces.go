@@ -13,12 +13,6 @@ type Node interface {
 	Update(float32)
 }
 
-type Weapon interface {
-	Node
-	Renderable
-	Attack(*World)
-}
-
 type Renderable interface {
 	Render()
 }
