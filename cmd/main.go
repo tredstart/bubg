@@ -3,11 +3,14 @@ package main
 import (
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/tredstart/bubg/internal/ntt"
+	"github.com/tredstart/bubg/internal/ntt/mods"
 )
 
 func main() {
-	rl.InitWindow(1080, 720, "Box's Unkbenownst Backgrounds")
+	rl.InitWindow(0, 0, "Box's Unkbenownst Backgrounds")
 	defer rl.CloseWindow()
+
+	rl.ToggleFullscreen()
 
 	SCREEN_WIDTH := rl.GetScreenWidth()
 	SCREEN_HEIGHT := rl.GetScreenHeight()
@@ -18,6 +21,10 @@ func main() {
 	source_rect := rl.Rectangle{
 		Width:  float32(gunt.Width),
 		Height: float32(gunt.Height),
+	}
+
+	dm := mods.DoubleMag{
+		Texture: ntt.BULLET_TEXTURE,
 	}
 
 	world := ntt.World{}
@@ -47,8 +54,12 @@ func main() {
 		ReloadTime:     ntt.NewTimer(2),
 		Ammo:           100,
 		AmmoCapacity:   100,
+		Icon:           gunt,
+		Description:    "RATATATA",
 	}
-    smg.ReloadTime.Callback = smg.Reload
+
+	smg.ReloadTime.Callback = smg.Reload
+
 	pistol := &ntt.Weapon{
 		Texture: ntt.Sprite{
 			Texture:     gunt,
@@ -59,15 +70,38 @@ func main() {
 		RateOfFire:     ntt.NewTimer(0.3),
 		BulletVelocity: 500,
 		ReloadTime:     ntt.NewTimer(1),
-		Ammo:           8,
 		AmmoCapacity:   8,
+		Icon:           gunt,
+		Description:    "It's not small, \nit's just cold out here",
+        Mods: make([]ntt.Modifier, 3),
 	}
 
-    pistol.ReloadTime.Callback = pistol.Reload
+	pistol.ReloadTime.Callback = pistol.Reload
+	pistol.EquipMod(&dm)
+    pistol.Reload()
+
+	rifle := &ntt.Weapon{
+		Texture: ntt.Sprite{
+			Texture:     gunt,
+			Scale:       1,
+			Tint:        rl.RayWhite,
+			TextureRect: source_rect,
+		},
+		RateOfFire:     ntt.NewTimer(1),
+		BulletVelocity: 1500,
+		ReloadTime:     ntt.NewTimer(1.3),
+		Ammo:           1,
+		AmmoCapacity:   1,
+		Description:    "Faithful railgun. Maybe.",
+		Icon:           gunt,
+	}
+
+	rifle.ReloadTime.Callback = rifle.Reload
 
 	world.Player.Inventory = ntt.Inventory{}
 	world.Player.Weapons[0] = pistol
 	world.Player.Weapons[1] = smg
+	// world.Player.Weapons[2] = rifle
 
 	camera := rl.Camera2D{}
 	camera.Zoom = 1.0
@@ -91,7 +125,7 @@ func main() {
 			}
 			rl.EndMode2D()
 			world.Player.Display()
-			world.Player.Inventory.Display()
+			world.Player.Inventory.Display(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 		}
 		rl.EndDrawing()

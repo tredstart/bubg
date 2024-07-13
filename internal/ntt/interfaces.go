@@ -7,12 +7,25 @@ type Shape interface {
 	Origin() rl.Vector2
 }
 
-type Node interface {
-	SetOrigin(rl.Vector2)
-	Rotate(float32)
-	Update(float32)
-}
-
 type Renderable interface {
 	Render()
+}
+
+type ModType uint
+
+// TODO: I need to capitalize on this idea and make 
+// special way to map enum to a slot in the weapon
+const (
+	Magazine ModType = iota
+	Muzzle
+	Scope
+	Underbarrel
+	Rail
+)
+
+type Modifier interface {
+	Mod(*Weapon)
+	Icon() rl.Texture2D
+    Description() string
+    Type() ModType
 }

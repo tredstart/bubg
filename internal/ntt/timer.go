@@ -6,14 +6,14 @@ import (
 
 type Timer struct {
 	current_time float32
-	end          float32
+	End          float32
 	Finished     bool
 	Callback     func()
 }
 
 func NewTimer(end float32) Timer {
 	return Timer{
-		end:      end,
+		End:      end,
 		Finished: true,
 	}
 }
@@ -21,7 +21,7 @@ func NewTimer(end float32) Timer {
 func (t *Timer) Tick() {
 	if !t.Finished {
 		t.current_time += rl.GetFrameTime()
-		if t.current_time >= t.end {
+		if t.current_time >= t.End {
 			t.Stop()
 		}
 	}

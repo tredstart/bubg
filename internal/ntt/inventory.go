@@ -7,29 +7,22 @@ type Inventory struct {
 	Weapons   [3]*Weapon
 }
 
-func (i *Inventory) Display() {
+func (i *Inventory) Display(screen_width, screen_height int) {
 	if i.activeHUD {
-		rect1 := rl.Rectangle{
+		rect := rl.Rectangle{
 			X:      30,
-			Y:      70,
-			Height: 150,
-			Width:  500,
-		}
-		rect2 := rl.Rectangle{
-			X:      30,
-			Y:      230,
-			Height: 150,
-			Width:  500,
-		}
-		rect3 := rl.Rectangle{
-			X:      30,
-			Y:      390,
-			Height: 150,
-			Width:  500,
+			Y:      float32(screen_height) / 5,
+			Height: float32(screen_height) / 2,
+			Width:  float32(screen_width) / 5,
 		}
 
-		rl.DrawRectangleRec(rect1, rl.NewColor(10, 10, 10, 70))
-		rl.DrawRectangleRec(rect2, rl.NewColor(10, 10, 10, 70))
-		rl.DrawRectangleRec(rect3, rl.NewColor(10, 10, 10, 70))
+		for _, weapon := range i.Weapons {
+			rl.DrawRectangleRec(rect, rl.NewColor(10, 10, 10, 70))
+			if weapon != nil {
+				weapon.Display(rect)
+				rect.X += rect.Width + 10
+			}
+		}
+
 	}
 }

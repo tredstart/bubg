@@ -18,15 +18,15 @@ type Weapon struct {
 	Description    string
 
 	// attachments
-	Magazine    float32
-	Scope       float32
-	Muzzle      float32
-	Underbarrel float32
-	Rail        float32
-	// Bullet BulletType
 
-	// maybe?
-	// Slots Attachment
+	Mods []Modifier
+
+	BaseDamage float32
+}
+
+func (g *Weapon) EquipMod(mod Modifier) {
+	g.Mods[int(mod.Type())%len(g.Mods)] = mod
+	mod.Mod(g)
 }
 
 func (g *Weapon) Reload() {
@@ -74,4 +74,29 @@ func (g *Weapon) Attack(world *World) {
 		bullet.SetVelocity(velocity)
 		world.Bullets = append(world.Bullets, bullet)
 	}
+}
+
+func (g *Weapon) Display(rect rl.Rectangle) {
+	rl.DrawTexturePro(
+		g.Icon,
+		rl.Rectangle{
+			X:      0,
+			Y:      0,
+			Width:  float32(g.Icon.Width),
+			Height: float32(g.Icon.Height),
+		},
+		rl.Rectangle{
+			X:      rect.X + rect.Width/2 - 40,
+			Y:      rect.Y + rect.Height/2 - 35,
+			Width:  80,
+			Height: 50,
+		},
+		rl.Vector2{
+			X: 0,
+			Y: 0,
+		},
+		0,
+		rl.RayWhite,
+	)
+	rl.DrawText(g.Description, int32(rect.X)+g.Icon.Width, int32(rect.Y)+g.Icon.Height/2, 16, rl.RayWhite)
 }

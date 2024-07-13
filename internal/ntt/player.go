@@ -51,16 +51,21 @@ func (p *Player) Update(dt float32) {
 		if rl.IsKeyPressed(rl.KeyTwo) {
 			p.activeWeapon = 1
 		}
+		if rl.IsKeyPressed(rl.KeyThree) {
+			p.activeWeapon = 2
+		}
 		current_weapon := p.CurrentWeapon()
 
 		p.Shape.Move(origin)
 		p.Shape.Rotate(p.rotation)
-		current_weapon.SetOrigin(origin)
-		current_weapon.Rotate(p.rotation)
-		current_weapon.Update(dt)
+		if current_weapon != nil {
+			current_weapon.SetOrigin(origin)
+			current_weapon.Rotate(p.rotation)
+			current_weapon.Update(dt)
 
-		if rl.IsMouseButtonDown(rl.MouseLeftButton) {
-			current_weapon.Attack(p.World)
+			if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+				current_weapon.Attack(p.World)
+			}
 		}
 	}
 
@@ -79,7 +84,10 @@ func (p *Player) Render() {
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
 	rl.DrawLineV(p.Shape.Origin(), mouse_pos, rl.Red)
 	rl.DrawRectangleRec(BB(&p.Shape), rl.NewColor(0, 179, 69, 80))
-	p.CurrentWeapon().Render()
+	current_weapon := p.CurrentWeapon()
+	if current_weapon != nil {
+		p.CurrentWeapon().Render()
+	}
 }
 
 func (p *Player) Display() {
@@ -100,20 +108,22 @@ func (p *Player) Display() {
 	rl.DrawRectangleRec(back_health, rl.LightGray)
 	rl.DrawRectangleRec(health, rl.Red)
 
-    current_weapon := p.CurrentWeapon()
+	current_weapon := p.CurrentWeapon()
+	if current_weapon != nil {
+		back_ammo := rl.Rectangle{
+			X:      10,
+			Y:      30,
+			Height: 7,
+			Width:  float32(current_weapon.AmmoCapacity) + 4,
+		}
+		ammo := rl.Rectangle{
+			X:      12,
+			Y:      32,
+			Height: 3,
+			Width:  float32(current_weapon.Ammo),
+		}
+		rl.DrawRectangleRec(back_ammo, rl.LightGray)
+		rl.DrawRectangleRec(ammo, rl.Yellow)
+	}
 
-	back_ammo := rl.Rectangle{
-		X:      10,
-		Y:      30,
-		Height: 7,
-		Width:  float32(current_weapon.AmmoCapacity) + 4,
-	}
-	ammo := rl.Rectangle{
-		X:      12,
-		Y:      32,
-		Height: 3,
-		Width:  float32(current_weapon.Ammo),
-	}
-	rl.DrawRectangleRec(back_ammo, rl.LightGray)
-	rl.DrawRectangleRec(ammo, rl.Yellow)
 }
