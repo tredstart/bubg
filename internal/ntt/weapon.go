@@ -1,6 +1,7 @@
 package ntt
 
 import (
+	"log"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -99,4 +100,18 @@ func (g *Weapon) Display(rect rl.Rectangle) {
 		rl.RayWhite,
 	)
 	rl.DrawText(g.Description, int32(rect.X)+g.Icon.Width, int32(rect.Y)+g.Icon.Height/2, 16, rl.RayWhite)
+	for i, mod := range g.Mods {
+		if mod != nil {
+            log.Println("mod : ", i)
+			icon := g.Icon
+			rl.DrawTexture(icon,
+				int32(rect.X+10),
+				int32(rect.Y+rect.Height-float32(icon.Height)-10),
+				rl.RayWhite,
+			)
+		} else {
+            log.Println("no mod", i)
+			rl.DrawText("no mod", int32(rect.X) + 80 * int32(i), rect.ToInt32().Y + rect.ToInt32().Height - 40, 15, rl.Red)
+		}
+	}
 }

@@ -56,6 +56,7 @@ func main() {
 		AmmoCapacity:   100,
 		Icon:           gunt,
 		Description:    "RATATATA",
+        Mods: make([]ntt.Modifier, 4),
 	}
 
 	smg.ReloadTime.Callback = smg.Reload
@@ -94,6 +95,7 @@ func main() {
 		AmmoCapacity:   1,
 		Description:    "Faithful railgun. Maybe.",
 		Icon:           gunt,
+        Mods: make([]ntt.Modifier, 1),
 	}
 
 	rifle.ReloadTime.Callback = rifle.Reload
