@@ -24,6 +24,7 @@ type Weapon struct {
 	Mods []Modifier
 
 	BaseDamage float32
+	Recoil     float32
 
 	// NOTE: maybe temporary?
 	Detectable bool
@@ -63,7 +64,7 @@ func (g *Weapon) Render() {
 	}
 }
 
-func (g *Weapon) Attack(world *World) {
+func (g *Weapon) Attack(world *World) bool {
 	if g.RateOfFire.Finished && g.Ammo > 0 {
 		g.Ammo -= 1
 		g.RateOfFire.Start()
@@ -81,7 +82,9 @@ func (g *Weapon) Attack(world *World) {
 		}
 		bullet.SetVelocity(velocity)
 		world.Bullets = append(world.Bullets, bullet)
+		return true
 	}
+	return false
 }
 
 func (g *Weapon) Display(rect rl.Rectangle) {

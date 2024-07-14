@@ -1,6 +1,8 @@
 package ntt
 
 import (
+	"math"
+
 	rl "github.com/gen2brain/raylib-go/raylib"
 )
 
@@ -21,6 +23,8 @@ type Player struct {
 	rotation     float32
 	World        *World
 	activeWeapon uint8
+	Velocity     rl.Vector2
+	Direction    rl.Vector2
 
 	Inventory
 	Stats
@@ -29,24 +33,32 @@ type Player struct {
 }
 
 func (p *Player) Update(dt float32) {
+	// FIXME: active hud should be a game state and should pause the game
 	if !p.activeHUD {
 		mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
 		p.rotation = LookAt(mouse_pos, p.Shape.Origin())
 
+		p.Direction.X = 0
+		p.Direction.Y = 0
+
 		origin := p.Shape.Origin()
 
 		if rl.IsKeyDown(rl.KeyW) {
-			origin.Y -= player_speed * dt
+			p.Direction.Y = -1
 		}
 		if rl.IsKeyDown(rl.KeyA) {
-			origin.X -= player_speed * dt
+			p.Direction.X = -1
 		}
 		if rl.IsKeyDown(rl.KeyS) {
-			origin.Y += player_speed * dt
+			p.Direction.Y = 1
 		}
 		if rl.IsKeyDown(rl.KeyD) {
-			origin.X += player_speed * dt
+			p.Direction.X = 1
 		}
+
+		p.Velocity.X = p.Direction.X * player_speed
+		p.Velocity.Y = p.Direction.Y * player_speed
+
 		if rl.IsKeyPressed(rl.KeyOne) {
 			p.activeWeapon = 0
 		}
@@ -58,18 +70,32 @@ func (p *Player) Update(dt float32) {
 		}
 		current_weapon := p.CurrentWeapon()
 
-		p.Shape.Move(origin)
-		p.Shape.Rotate(p.rotation)
+		if current_weapon != nil {
+
+			if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+				if current_weapon.Attack(p.World) {
+					recoil := rl.Vector2{
+						X: current_weapon.Recoil * float32(math.Cos(float64(p.rotation * rl.Deg2rad))),
+						Y: current_weapon.Recoil * float32(math.Sin(float64(p.rotation * rl.Deg2rad))),
+					}
+					p.Velocity.X += recoil.X
+					p.Velocity.Y += recoil.Y
+				}
+
+			}
+		}
+
+		origin.X += p.Velocity.X * dt
+		origin.Y += p.Velocity.Y * dt
+
 		if current_weapon != nil {
 			current_weapon.SetOrigin(origin)
 			current_weapon.Rotate(p.rotation)
 			current_weapon.Update(dt)
-
-			if rl.IsMouseButtonDown(rl.MouseLeftButton) {
-				current_weapon.Attack(p.World)
-			}
 		}
 
+		p.Shape.Move(origin)
+		p.Shape.Rotate(p.rotation)
 	}
 	if p.DetectedWeapon != nil && rl.IsKeyPressed(rl.KeyF) {
 		p.activeHUD = !p.activeHUD

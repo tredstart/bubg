@@ -45,7 +45,7 @@ func main() {
 	}
 
 	for _, point := range spawn_data.SpawnPoints {
-		if rand.Intn(3) == 0 {
+		if rand.Intn(2) == 0 {
 			world.Weapons = append(world.Weapons, &ntt.Weapon{
 				Texture: ntt.Sprite{
 					Pos:         point,
@@ -74,14 +74,15 @@ func main() {
 		RateOfFire:     ntt.NewTimer(0.01),
 		BulletVelocity: 700,
 		ReloadTime:     ntt.NewTimer(2),
-		Ammo:           100,
 		AmmoCapacity:   100,
 		Icon:           gunt,
 		Description:    "RATATATA",
 		Mods:           make([]ntt.Modifier, 4),
+        Recoil: 200,
 	}
 
 	smg.ReloadTime.Callback = smg.Reload
+    smg.Reload()
 
 	pistol := &ntt.Weapon{
 		Texture: ntt.Sprite{
@@ -97,6 +98,7 @@ func main() {
 		Icon:           gunt,
 		Description:    "It's not small, \nit's just cold out here",
 		Mods:           make([]ntt.Modifier, 3),
+        Recoil: 100,
 	}
 
 	pistol.ReloadTime.Callback = pistol.Reload
