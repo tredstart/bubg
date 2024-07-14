@@ -8,9 +8,10 @@ import (
 )
 
 type Weapon struct {
-	AmmoCapacity uint8
-	Ammo         uint8
+	AmmoCapacity uint32
+	Ammo         uint32
 
+	// Texture width is used for detection
 	Texture        Sprite
 	RateOfFire     Timer
 	BulletVelocity float32
@@ -23,6 +24,9 @@ type Weapon struct {
 	Mods []Modifier
 
 	BaseDamage float32
+
+	// NOTE: maybe temporary?
+	Detectable bool
 }
 
 func (g *Weapon) EquipMod(mod Modifier) {
@@ -54,6 +58,9 @@ func (g *Weapon) SetOrigin(origin rl.Vector2) {
 
 func (g *Weapon) Render() {
 	g.Texture.Render()
+	if g.Detectable {
+		rl.DrawCircleV(g.Texture.Center(), g.Texture.TextureRect.Width, rl.NewColor(0, 30, 150, 50))
+	}
 }
 
 func (g *Weapon) Attack(world *World) {
@@ -102,7 +109,7 @@ func (g *Weapon) Display(rect rl.Rectangle) {
 	rl.DrawText(g.Description, int32(rect.X)+g.Icon.Width, int32(rect.Y)+g.Icon.Height/2, 16, rl.RayWhite)
 	for i, mod := range g.Mods {
 		if mod != nil {
-            log.Println("mod : ", i)
+			log.Println("mod : ", i)
 			icon := g.Icon
 			rl.DrawTexture(icon,
 				int32(rect.X+10),
@@ -110,8 +117,8 @@ func (g *Weapon) Display(rect rl.Rectangle) {
 				rl.RayWhite,
 			)
 		} else {
-            log.Println("no mod", i)
-			rl.DrawText("no mod", int32(rect.X) + 80 * int32(i), rect.ToInt32().Y + rect.ToInt32().Height - 40, 15, rl.Red)
+			log.Println("no mod", i)
+			rl.DrawText("no mod", int32(rect.X)+80*int32(i), rect.ToInt32().Y+rect.ToInt32().Height-40, 15, rl.Red)
 		}
 	}
 }

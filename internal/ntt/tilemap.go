@@ -34,8 +34,14 @@ func NewTile(x, y float32, c rl.Color) Tile {
 
 type Tiles []Tile
 
-func (t *Tiles) LoadMap(filepath string) rl.Vector2 {
-	var player_pos rl.Vector2
+type SpawnData struct {
+	PlayerPos   rl.Vector2
+	SpawnPoints []rl.Vector2
+}
+
+func (t *Tiles) LoadMap(filepath string) SpawnData {
+	spawn := SpawnData{}
+
 	file, err := os.Open(filepath)
 	defer file.Close()
 	if err != nil {
@@ -51,7 +57,9 @@ func (t *Tiles) LoadMap(filepath string) rl.Vector2 {
 			case 'x':
 				*t = append(*t, NewTile(x, y, rl.Blue))
 			case 'p':
-				player_pos = rl.Vector2{X: x, Y: y}
+				spawn.PlayerPos = rl.Vector2{X: x, Y: y}
+			case 's':
+				spawn.SpawnPoints = append(spawn.SpawnPoints, rl.Vector2{X: x, Y: y})
 			}
 			x += TileWidth + 1
 		}
@@ -61,7 +69,7 @@ func (t *Tiles) LoadMap(filepath string) rl.Vector2 {
 	if err = scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	return player_pos
+	return spawn
 }
 
 func (t *Tiles) Render() {

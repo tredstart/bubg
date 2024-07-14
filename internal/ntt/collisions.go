@@ -47,7 +47,7 @@ func ResolvePlayerTiles(player *Player, tiles Tiles) {
 			origin.X += shift_x
 			origin.Y += shift_y
 			player.Shape.Move(origin)
-            player.Shape.Rotate(player.rotation)
+			player.Shape.Rotate(player.rotation)
 		}
 	}
 }
@@ -55,9 +55,20 @@ func ResolvePlayerTiles(player *Player, tiles Tiles) {
 func BulletCollidesTiles(bullet *Bullet, tiles Tiles) bool {
 	for _, tile := range tiles {
 		if Collides(&bullet.Hitbox, &tile.Shape) {
-            return true
+			return true
 		}
 	}
 
-    return false
+	return false
+}
+
+func ResolvePlayerDetectWeapon(player *Player, weapons []*Weapon) {
+	for _, weapon := range weapons {
+		if rl.CheckCollisionCircleRec(weapon.Texture.Center(), weapon.Texture.TextureRect.Width, BB(&player.Shape)) {
+			player.DetectedWeapon = weapon
+			break
+		} else {
+			player.DetectedWeapon = nil
+		}
+	}
 }

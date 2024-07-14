@@ -24,6 +24,8 @@ type Player struct {
 
 	Inventory
 	Stats
+
+	DetectedWeapon *Weapon
 }
 
 func (p *Player) Update(dt float32) {
@@ -67,6 +69,10 @@ func (p *Player) Update(dt float32) {
 				current_weapon.Attack(p.World)
 			}
 		}
+
+	}
+	if p.DetectedWeapon != nil && rl.IsKeyPressed(rl.KeyF) {
+		p.activeHUD = !p.activeHUD
 	}
 
 	if rl.IsKeyPressed(rl.KeyTab) {
