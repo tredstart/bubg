@@ -34,69 +34,67 @@ type Player struct {
 
 func (p *Player) Update(dt float32) {
 	// FIXME: active hud should be a game state and should pause the game
-	if !p.activeHUD {
-		mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
-		p.rotation = LookAt(mouse_pos, p.Shape.Origin())
+	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
+	p.rotation = LookAt(mouse_pos, p.Shape.Origin())
 
-		p.Direction.X = 0
-		p.Direction.Y = 0
+	p.Direction.X = 0
+	p.Direction.Y = 0
 
-		origin := p.Shape.Origin()
+	origin := p.Shape.Origin()
 
-		if rl.IsKeyDown(rl.KeyW) {
-			p.Direction.Y = -1
-		}
-		if rl.IsKeyDown(rl.KeyA) {
-			p.Direction.X = -1
-		}
-		if rl.IsKeyDown(rl.KeyS) {
-			p.Direction.Y = 1
-		}
-		if rl.IsKeyDown(rl.KeyD) {
-			p.Direction.X = 1
-		}
-
-		p.Velocity.X = p.Direction.X * player_speed
-		p.Velocity.Y = p.Direction.Y * player_speed
-
-		if rl.IsKeyPressed(rl.KeyOne) {
-			p.activeWeapon = 0
-		}
-		if rl.IsKeyPressed(rl.KeyTwo) {
-			p.activeWeapon = 1
-		}
-		if rl.IsKeyPressed(rl.KeyThree) {
-			p.activeWeapon = 2
-		}
-		current_weapon := p.CurrentWeapon()
-
-		if current_weapon != nil {
-
-			if rl.IsMouseButtonDown(rl.MouseLeftButton) {
-				if current_weapon.Attack(p.World) {
-					recoil := rl.Vector2{
-						X: current_weapon.Recoil * float32(math.Cos(float64(p.rotation * rl.Deg2rad))),
-						Y: current_weapon.Recoil * float32(math.Sin(float64(p.rotation * rl.Deg2rad))),
-					}
-					p.Velocity.X += recoil.X
-					p.Velocity.Y += recoil.Y
-				}
-
-			}
-		}
-
-		origin.X += p.Velocity.X * dt
-		origin.Y += p.Velocity.Y * dt
-
-		if current_weapon != nil {
-			current_weapon.SetOrigin(origin)
-			current_weapon.Rotate(p.rotation)
-			current_weapon.Update(dt)
-		}
-
-		p.Shape.Move(origin)
-		p.Shape.Rotate(p.rotation)
+	if rl.IsKeyDown(rl.KeyW) {
+		p.Direction.Y = -1
 	}
+	if rl.IsKeyDown(rl.KeyA) {
+		p.Direction.X = -1
+	}
+	if rl.IsKeyDown(rl.KeyS) {
+		p.Direction.Y = 1
+	}
+	if rl.IsKeyDown(rl.KeyD) {
+		p.Direction.X = 1
+	}
+
+	p.Velocity.X = p.Direction.X * player_speed
+	p.Velocity.Y = p.Direction.Y * player_speed
+
+	if rl.IsKeyPressed(rl.KeyOne) {
+		p.activeWeapon = 0
+	}
+	if rl.IsKeyPressed(rl.KeyTwo) {
+		p.activeWeapon = 1
+	}
+	if rl.IsKeyPressed(rl.KeyThree) {
+		p.activeWeapon = 2
+	}
+	current_weapon := p.CurrentWeapon()
+
+	if current_weapon != nil {
+
+		if rl.IsMouseButtonDown(rl.MouseLeftButton) {
+			if current_weapon.Attack(p.World) {
+				recoil := rl.Vector2{
+					X: current_weapon.Recoil * float32(math.Cos(float64(p.rotation*rl.Deg2rad))),
+					Y: current_weapon.Recoil * float32(math.Sin(float64(p.rotation*rl.Deg2rad))),
+				}
+				p.Velocity.X += recoil.X
+				p.Velocity.Y += recoil.Y
+			}
+
+		}
+	}
+
+	origin.X += p.Velocity.X * dt
+	origin.Y += p.Velocity.Y * dt
+
+	if current_weapon != nil {
+		current_weapon.SetOrigin(origin)
+		current_weapon.Rotate(p.rotation)
+		current_weapon.Update(dt)
+	}
+
+	p.Shape.Move(origin)
+	p.Shape.Rotate(p.rotation)
 	if p.DetectedWeapon != nil && rl.IsKeyPressed(rl.KeyF) {
 		p.activeHUD = !p.activeHUD
 	}

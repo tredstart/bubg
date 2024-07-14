@@ -78,11 +78,11 @@ func main() {
 		Icon:           gunt,
 		Description:    "RATATATA",
 		Mods:           make([]ntt.Modifier, 4),
-        Recoil: 200,
+		Recoil:         200,
 	}
 
 	smg.ReloadTime.Callback = smg.Reload
-    smg.Reload()
+	smg.Reload()
 
 	pistol := &ntt.Weapon{
 		Texture: ntt.Sprite{
@@ -98,7 +98,7 @@ func main() {
 		Icon:           gunt,
 		Description:    "It's not small, \nit's just cold out here",
 		Mods:           make([]ntt.Modifier, 3),
-        Recoil: 100,
+		Recoil:         100,
 	}
 
 	pistol.ReloadTime.Callback = pistol.Reload
