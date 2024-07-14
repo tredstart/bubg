@@ -1,6 +1,7 @@
 package ntt
 
 import (
+	"log"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -29,7 +30,8 @@ type Player struct {
 	Inventory
 	Stats
 
-	DetectedWeapon *Weapon
+	DetectedWeapon   *Weapon
+	DetectedWeaponID int
 }
 
 func (p *Player) Update(dt float32) {
@@ -98,11 +100,31 @@ func (p *Player) Update(dt float32) {
 	if p.DetectedWeapon != nil && rl.IsKeyPressed(rl.KeyF) {
 		p.activeHUD = !p.activeHUD
 	}
-
 	if rl.IsKeyPressed(rl.KeyTab) {
 		p.activeHUD = !p.activeHUD
 	}
 
+}
+
+func (p *Player) EquipWeapon(inventory_id int) {
+	tmp_weapon := p.Inventory.Weapons[inventory_id]
+    log.Println(tmp_weapon)
+	if tmp_weapon != nil {
+		p.DropWeapon(inventory_id)
+	}
+	p.Inventory.Weapons[inventory_id] = p.DetectedWeapon
+	p.DetectedWeapon.Detectable = false
+    p.DetectedWeapon.Reload()
+}
+
+func (p *Player) DropWeapon(inventory_id int) {
+	tmp_weapon := p.Inventory.Weapons[inventory_id]
+	if tmp_weapon != nil {
+		tmp_weapon.Detectable = true
+		tmp_weapon.SetOrigin(p.Shape.Center)
+	}
+	p.Inventory.Weapons[inventory_id] = nil
+	p.World.Weapons[p.DetectedWeaponID] = tmp_weapon
 }
 
 func (p *Player) CurrentWeapon() *Weapon {

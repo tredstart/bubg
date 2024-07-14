@@ -63,12 +63,15 @@ func BulletCollidesTiles(bullet *Bullet, tiles Tiles) bool {
 }
 
 func ResolvePlayerDetectWeapon(player *Player, weapons []*Weapon) {
-	for _, weapon := range weapons {
-		if rl.CheckCollisionCircleRec(weapon.Texture.Center(), weapon.Texture.TextureRect.Width, BB(&player.Shape)) {
-			player.DetectedWeapon = weapon
-			break
-		} else {
-			player.DetectedWeapon = nil
+	for i, weapon := range weapons {
+		if weapon != nil {
+			if rl.CheckCollisionCircleRec(weapon.Texture.Center(), weapon.Texture.TextureRect.Width, BB(&player.Shape)) {
+				player.DetectedWeapon = weapon
+				player.DetectedWeaponID = i
+				break
+			} else {
+				player.DetectedWeapon = nil
+			}
 		}
 	}
 }

@@ -46,6 +46,8 @@ func (w *World) Render() {
 		bullet.Render()
 	}
 	for _, weapon := range w.Weapons {
-		weapon.Render()
+		if weapon != nil {
+			weapon.Render()
+		}
 	}
 }

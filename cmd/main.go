@@ -46,7 +46,7 @@ func main() {
 
 	for _, point := range spawn_data.SpawnPoints {
 		if rand.Intn(2) == 0 {
-			world.Weapons = append(world.Weapons, &ntt.Weapon{
+			weapon := &ntt.Weapon{
 				Texture: ntt.Sprite{
 					Pos:         point,
 					Texture:     gunt,
@@ -58,9 +58,15 @@ func main() {
 				AmmoCapacity: uint32(rand.Intn(100) + 1),
 				// FIXME: this should be redone as something normal/take the number of mods available
 				// NOTE: also they should be randomly filled with some of the mods
-				Mods:       make([]ntt.Modifier, rand.Intn(5)+1),
-				Detectable: true,
-			})
+				Mods:           make([]ntt.Modifier, rand.Intn(5)+1),
+				Detectable:     true,
+				RateOfFire:     ntt.NewTimer(rand.Float32()),
+				ReloadTime:     ntt.NewTimer(rand.Float32() * 2),
+				BulletVelocity: rand.Float32()*1000 + 500,
+				Recoil:         rand.Float32() * 2000,
+			}
+			weapon.ReloadTime.Callback = weapon.Reload
+			world.Weapons = append(world.Weapons, weapon)
 		}
 	}
 
