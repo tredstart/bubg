@@ -121,7 +121,7 @@ func (p *Player) DropWeapon(inventory_id int) {
 		tmp_weapon.Detectable = true
 		tmp_weapon.SetOrigin(p.Shape.Center)
 		tmp_weapon.Texture.Origin = rl.Vector2{X: 0, Y: 0}
-        tmp_weapon.Rotate(0)
+		tmp_weapon.Rotate(0)
 	}
 	p.Inventory.Weapons[inventory_id] = nil
 	p.World.Weapons[p.DetectedWeaponID] = tmp_weapon

@@ -131,8 +131,6 @@ func main() {
 	rifle.ReloadTime.Callback = rifle.Reload
 
 	world.Player.Inventory = ntt.Inventory{}
-	world.Player.Weapons[0] = pistol
-	world.Player.Weapons[1] = smg
 	// world.Player.Weapons[2] = rifle
 
 	camera := rl.Camera2D{}
@@ -141,6 +139,16 @@ func main() {
 	world.Player.Camera = &camera
 
 	world.Player.World = &world
+
+	world.Weapons = append(world.Weapons, pistol)
+	world.Player.DetectedWeaponID = len(world.Weapons) - 1
+	world.Player.DetectedWeapon = pistol
+	world.Player.EquipWeapon(0)
+
+	world.Weapons = append(world.Weapons, smg)
+	world.Player.DetectedWeaponID = len(world.Weapons) - 1
+	world.Player.DetectedWeapon = smg
+	world.Player.EquipWeapon(1)
 
 	rl.SetTargetFPS(60)
 
