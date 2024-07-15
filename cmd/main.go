@@ -66,6 +66,7 @@ func main() {
 				Recoil:         rand.Float32() * 2000,
 			}
 			weapon.ReloadTime.Callback = weapon.Reload
+			weapon.ID = len(world.Weapons)
 			world.Weapons = append(world.Weapons, weapon)
 		}
 	}
@@ -89,6 +90,8 @@ func main() {
 
 	smg.ReloadTime.Callback = smg.Reload
 	smg.Reload()
+	smg.ID = len(world.Weapons)
+	world.Weapons = append(world.Weapons, smg)
 
 	pistol := &ntt.Weapon{
 		Texture: ntt.Sprite{
@@ -110,6 +113,8 @@ func main() {
 	pistol.ReloadTime.Callback = pistol.Reload
 	pistol.EquipMod(&dm)
 	pistol.Reload()
+	pistol.ID = len(world.Weapons)
+	world.Weapons = append(world.Weapons, pistol)
 
 	rifle := &ntt.Weapon{
 		Texture: ntt.Sprite{
@@ -140,13 +145,9 @@ func main() {
 
 	world.Player.World = &world
 
-	world.Weapons = append(world.Weapons, pistol)
-	world.Player.DetectedWeaponID = len(world.Weapons) - 1
 	world.Player.DetectedWeapon = pistol
 	world.Player.EquipWeapon(0)
 
-	world.Weapons = append(world.Weapons, smg)
-	world.Player.DetectedWeaponID = len(world.Weapons) - 1
 	world.Player.DetectedWeapon = smg
 	world.Player.EquipWeapon(1)
 

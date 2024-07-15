@@ -7,6 +7,8 @@ import (
 )
 
 type Weapon struct {
+	ID int
+
 	AmmoCapacity uint32
 	Ammo         uint32
 

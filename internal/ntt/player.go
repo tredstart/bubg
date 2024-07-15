@@ -29,11 +29,15 @@ type Player struct {
 	Inventory
 	Stats
 
-	DetectedWeapon   *Weapon
-	DetectedWeaponID int
+	DetectedWeapon *Weapon
 }
 
 func (p *Player) Update(dt float32) {
+	for _, weapon := range p.Weapons {
+		if weapon != nil {
+			p.World.Weapons[weapon.ID] = nil
+		}
+	}
 	// FIXME: active hud should be a game state and should pause the game
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
 	p.rotation = LookAt(mouse_pos, p.Shape.Origin())
@@ -122,9 +126,9 @@ func (p *Player) DropWeapon(inventory_id int) {
 		tmp_weapon.SetOrigin(p.Shape.Center)
 		tmp_weapon.Texture.Origin = rl.Vector2{X: 0, Y: 0}
 		tmp_weapon.Rotate(0)
+		p.World.Weapons[tmp_weapon.ID] = tmp_weapon
 	}
 	p.Inventory.Weapons[inventory_id] = nil
-	p.World.Weapons[p.DetectedWeaponID] = tmp_weapon
 }
 
 func (p *Player) CurrentWeapon() *Weapon {
