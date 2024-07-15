@@ -1,7 +1,6 @@
 package ntt
 
 import (
-	"log"
 	"math"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -108,13 +107,12 @@ func (p *Player) Update(dt float32) {
 
 func (p *Player) EquipWeapon(inventory_id int) {
 	tmp_weapon := p.Inventory.Weapons[inventory_id]
-    log.Println(tmp_weapon)
 	if tmp_weapon != nil {
 		p.DropWeapon(inventory_id)
 	}
 	p.Inventory.Weapons[inventory_id] = p.DetectedWeapon
 	p.DetectedWeapon.Detectable = false
-    p.DetectedWeapon.Reload()
+	p.DetectedWeapon.Reload()
 }
 
 func (p *Player) DropWeapon(inventory_id int) {
@@ -122,6 +120,8 @@ func (p *Player) DropWeapon(inventory_id int) {
 	if tmp_weapon != nil {
 		tmp_weapon.Detectable = true
 		tmp_weapon.SetOrigin(p.Shape.Center)
+		tmp_weapon.Texture.Origin = rl.Vector2{X: 0, Y: 0}
+        tmp_weapon.Rotate(0)
 	}
 	p.Inventory.Weapons[inventory_id] = nil
 	p.World.Weapons[p.DetectedWeaponID] = tmp_weapon

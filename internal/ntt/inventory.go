@@ -13,12 +13,12 @@ func (i *Inventory) Update(player *Player) {
 		if rl.IsMouseButtonPressed(rl.MouseButtonLeft) && player.DetectedWeapon != nil {
 			// make a proper equip here
 			player.EquipWeapon(i.Hovered)
-            player.activeHUD = false
+			player.activeHUD = false
 		}
 		if rl.IsMouseButtonPressed(rl.MouseButtonRight) {
 			// drop a weapon
 			player.DropWeapon(i.Hovered)
-            player.activeHUD = false
+			player.activeHUD = false
 		}
 	}
 	if rl.IsKeyPressed(rl.KeyTab) || rl.IsKeyPressed(rl.KeyF) {
@@ -50,7 +50,7 @@ func (i *Inventory) Display(screen_width, screen_height int) {
 			if weapon != nil {
 				weapon.Display(rect)
 			}
-				rect.X += rect.Width + 10
+			rect.X += rect.Width + 10
 		}
 
 	}
