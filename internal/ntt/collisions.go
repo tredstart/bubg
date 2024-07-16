@@ -20,8 +20,8 @@ func ResolvePlayerTiles(player *Player, tiles Tiles) {
 
 			origin.X += shift_x
 			origin.Y += shift_y
-			player.Shape.Move(origin)
 			player.Shape.Rotation = player.rotation
+			player.Shape.Move(origin)
 		}
 	}
 }
