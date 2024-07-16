@@ -8,7 +8,7 @@ import (
 
 const DEFAULT_WEAPON_MARGIN = 5
 
-func Collides(shape1, shape2 Shape) bool {
+func Collides(shape1, shape2 Polygon) bool {
 	sep1 := FindMinSeparation(shape1, shape2)
 	sep2 := FindMinSeparation(shape2, shape1)
 	return sep1 <= 0 && sep2 <= 0
@@ -16,8 +16,8 @@ func Collides(shape1, shape2 Shape) bool {
 
 func WeaponOffset(sprite rl.Texture2D) rl.Vector2 {
 	return rl.Vector2{
-		X: float32(PLAYER_WIDTH/2 + sprite.Width/2),
-		Y: float32(PLAYER_HEIGHT/2 + sprite.Height),
+		X: float32(PLAYER_RADIUS/2 + sprite.Width/2),
+		Y: float32(PLAYER_RADIUS/2 + sprite.Height),
 	}
 }
 
@@ -47,14 +47,14 @@ func Overlap(a, b rl.Rectangle) (float32, float32) {
 	return shift_x, shift_y
 }
 
-func BB(s Shape) rl.Rectangle {
+func BB(s Polygon) rl.Rectangle {
 	var min_x, max_x, min_y, max_y float32
 	min_x = math.MaxFloat32
 	min_y = math.MaxFloat32
 	max_x = -math.MaxFloat32
 	max_y = -math.MaxFloat32
 
-	for _, v := range s.Vertices() {
+	for _, v := range s.Vertices {
 		if v.X < min_x {
 			min_x = v.X
 		}
@@ -77,10 +77,10 @@ func BB(s Shape) rl.Rectangle {
 	}
 }
 
-func FindMinSeparation(shape1, shape2 Shape) float64 {
+func FindMinSeparation(shape1, shape2 Polygon) float64 {
 	separation := -math.MaxFloat64
-	vertices1 := shape1.Vertices()
-	vertices2 := shape2.Vertices()
+	vertices1 := shape1.Vertices
+	vertices2 := shape2.Vertices
 
 	for i, va := range vertices1 {
 		normal := Normal(va, vertices1[(i+1)%len(vertices1)])
@@ -101,7 +101,7 @@ func FindMinSeparation(shape1, shape2 Shape) float64 {
 func Normal(v1, v2 rl.Vector2) rl.Vector2 {
 	edge := rl.Vector2Subtract(v2, v1)
 	length := rl.Vector2Length(edge)
-	return rl.Vector2{X: -edge.Y / length, Y: edge.X / length}
+	return rl.Vector2{X: edge.Y / length, Y: -edge.X / length}
 }
 
 func LookAt(object, target rl.Vector2) float32 {

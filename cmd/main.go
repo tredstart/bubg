@@ -33,15 +33,24 @@ func main() {
 	world := ntt.World{}
 	spawn_data := world.CurrentMap.LoadMap("assets/maps/test")
 	world.Player = ntt.Player{
-		Shape: ntt.NewRect(
+		Shape: ntt.NewPolygon(
 			spawn_data.PlayerPos,
-			ntt.PLAYER_WIDTH, ntt.PLAYER_HEIGHT, 0,
+			4, ntt.PLAYER_RADIUS, 0,
 			rl.Red,
 		),
 		Stats: ntt.Stats{
 			MaxHealth:     100,
 			CurrentHealth: 100,
 		},
+	}
+
+	enemies := []ntt.Polygon{}
+	for _, enemy := range spawn_data.EnemyPoints {
+		enemies = append(enemies, ntt.NewPolygon(
+			enemy,
+			3, 50, 0,
+			rl.Yellow,
+		))
 	}
 
 	for _, point := range spawn_data.SpawnPoints {
@@ -156,7 +165,7 @@ func main() {
 	for !rl.WindowShouldClose() {
 		dt := rl.GetFrameTime()
 		world.Update(dt)
-		camera.Target = world.Player.Shape.Origin()
+		camera.Target = world.Player.Shape.Origin
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		rl.DrawFPS(int32(SCREEN_WIDTH)-150, 50)
@@ -164,6 +173,9 @@ func main() {
 			rl.BeginMode2D(camera)
 			{
 				world.Render()
+				for _, enemy := range enemies {
+					enemy.Render()
+				}
 			}
 			rl.EndMode2D()
 			world.Player.Display()

@@ -9,22 +9,21 @@ import (
 )
 
 const (
-	TileWidth  = 69
-	TileHeight = 69
+	TileSide = 69
 )
 
 type Tile struct {
-	Shape Rect
+	Shape Polygon
 }
 
 func NewTile(x, y float32, c rl.Color) Tile {
 	tile := Tile{
-		Shape: NewRect(
+		Shape: NewPolygon(
 			rl.Vector2{
 				X: x,
 				Y: y,
 			},
-			TileWidth, TileHeight, 0,
+			4, TileSide, 0,
 			c,
 		),
 	}
@@ -37,6 +36,7 @@ type Tiles []Tile
 type SpawnData struct {
 	PlayerPos   rl.Vector2
 	SpawnPoints []rl.Vector2
+    EnemyPoints []rl.Vector2
 }
 
 func (t *Tiles) LoadMap(filepath string) SpawnData {
@@ -60,10 +60,12 @@ func (t *Tiles) LoadMap(filepath string) SpawnData {
 				spawn.PlayerPos = rl.Vector2{X: x, Y: y}
 			case 's':
 				spawn.SpawnPoints = append(spawn.SpawnPoints, rl.Vector2{X: x, Y: y})
+			case 'e':
+                spawn.EnemyPoints = append(spawn.EnemyPoints, rl.Vector2{X: x, Y: y})
 			}
-			x += TileWidth + 1
+			x += TileSide + 1
 		}
-		y += TileHeight + 1
+		y += TileSide + 1
 	}
 
 	if err = scanner.Err(); err != nil {

@@ -8,8 +8,7 @@ import (
 
 const (
 	player_speed  = 300
-	PLAYER_WIDTH  = 50
-	PLAYER_HEIGHT = 50
+	PLAYER_RADIUS  = 50
 )
 
 type Stats struct {
@@ -18,7 +17,7 @@ type Stats struct {
 }
 
 type Player struct {
-	Shape        Rect
+	Shape        Polygon
 	Camera       *rl.Camera2D
 	rotation     float32
 	World        *World
@@ -40,12 +39,12 @@ func (p *Player) Update(dt float32) {
 	}
 	// FIXME: active hud should be a game state and should pause the game
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
-	p.rotation = LookAt(mouse_pos, p.Shape.Origin())
+	p.rotation = LookAt(mouse_pos, p.Shape.Origin)
 
 	p.Direction.X = 0
 	p.Direction.Y = 0
 
-	origin := p.Shape.Origin()
+	origin := p.Shape.Origin
 
 	if rl.IsKeyDown(rl.KeyW) {
 		p.Direction.Y = -1
@@ -98,8 +97,8 @@ func (p *Player) Update(dt float32) {
 		current_weapon.Update(dt)
 	}
 
+	p.Shape.Rotation = p.rotation
 	p.Shape.Move(origin)
-	p.Shape.Rotate(p.rotation)
 	if p.DetectedWeapon != nil && rl.IsKeyPressed(rl.KeyF) {
 		p.activeHUD = !p.activeHUD
 	}
@@ -123,7 +122,7 @@ func (p *Player) DropWeapon(inventory_id int) {
 	tmp_weapon := p.Inventory.Weapons[inventory_id]
 	if tmp_weapon != nil {
 		tmp_weapon.Detectable = true
-		tmp_weapon.SetOrigin(p.Shape.Center)
+		tmp_weapon.SetOrigin(p.Shape.Origin)
 		tmp_weapon.Texture.Origin = rl.Vector2{X: 0, Y: 0}
 		tmp_weapon.Rotate(0)
 		p.World.Weapons[tmp_weapon.ID] = tmp_weapon
@@ -138,8 +137,8 @@ func (p *Player) CurrentWeapon() *Weapon {
 func (p *Player) Render() {
 	p.Shape.Render()
 	mouse_pos := rl.GetScreenToWorld2D(rl.GetMousePosition(), *p.Camera)
-	rl.DrawLineV(p.Shape.Origin(), mouse_pos, rl.Red)
-	rl.DrawRectangleRec(BB(&p.Shape), rl.NewColor(0, 179, 69, 80))
+	rl.DrawLineV(p.Shape.Origin, mouse_pos, rl.Red)
+	rl.DrawRectangleRec(BB(p.Shape), rl.NewColor(0, 179, 69, 80))
 	current_weapon := p.CurrentWeapon()
 	if current_weapon != nil {
 		p.CurrentWeapon().Render()
